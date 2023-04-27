@@ -13,7 +13,7 @@ Decrease Price: Given a model number, the code decreases the price of the corres
 
 Insert PC: Given information about a new PC (manufacturer, model number, speed, RAM, disk size, and price), the code inserts a new row into both the pc table and the product table.
 
-### Using it
+### Run it!
 
 The code uses a configuration file (config.json) to connect to the PostgreSQL database. The psycopg2 library is used to interact with the database.
 
