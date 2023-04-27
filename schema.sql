@@ -1,3 +1,6 @@
+-- Samuel Chamalé | 4444@schr.tech
+-- 2023-04-27
+
 -- Tables creation
 
 CREATE TABLE product

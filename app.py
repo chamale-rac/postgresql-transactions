@@ -1,22 +1,8 @@
-'''
-CREATE TABLE product
-(
-    manufacturer VARCHAR(255),
-    model        VARCHAR(255),
-    type         VARCHAR(255),
-    PRIMARY KEY (model)
-);
-
-CREATE TABLE pc
-(
-    model VARCHAR(255) REFERENCES product (model),
-    speed FLOAT,
-    ram   FLOAT,
-    disk  FLOAT,
-    price FLOAT,
-    PRIMARY KEY (model)
-);
-'''
+# Samuel Chamalé | 4444@schr.tech
+# 2023-04-27
+# Description: This file contains the main application logic for the PC database
+#              management system. It contains functions for finding PCs, removing
+#              PCs, decreasing the price of PCs, and inserting PCs.
 
 import json
 import psycopg2
