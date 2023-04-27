@@ -21,4 +21,4 @@ To run the code, simply install the depencencies defined in the requirements.txt
 
 Remember to modify the config.json file with the correct credentials for your own connection.
 
-The schema and test data used in this example is contained in the schema.sql file.
+The schema and test data used in this excercise are contained in the schema.sql file.
