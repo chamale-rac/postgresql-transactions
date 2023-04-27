@@ -1,5 +1,6 @@
 -- Samuel Chamalé | 4444@schr.tech
 -- 2023-04-27
+-- Database schema for the PC Store
 
 -- Tables creation
 
