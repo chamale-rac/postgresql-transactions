@@ -5,13 +5,13 @@
 
 This repository contains Python code for working with a PostgreSQL database. The code allows you to perform the following operations:
 
-Find PCs: Given a speed and RAM, the code queries the pc table in the database to find all PCs that match the given speed and RAM.
+- Find PCs: Given a speed and RAM, the code queries the pc table in the database to find all PCs that match the given speed and RAM.
 
-Remove PC: Given a model number, the code removes the corresponding PC from both the pc table and the product table.
+- Remove PC: Given a model number, the code removes the corresponding PC from both the pc table and the product table.
 
-Decrease Price: Given a model number, the code decreases the price of the corresponding PC in the pc table by 100.
+- Decrease Price: Given a model number, the code decreases the price of the corresponding PC in the pc table by 100.
 
-Insert PC: Given information about a new PC (manufacturer, model number, speed, RAM, disk size, and price), the code inserts a new row into both the pc table and the product table.
+- Insert PC: Given information about a new PC (manufacturer, model number, speed, RAM, disk size, and price), the code inserts a new row into both the pc table and the product table.
 
 ### Run it!
 
