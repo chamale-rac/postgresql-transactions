@@ -18,9 +18,9 @@ CREATE TABLE pc
 );
 '''
 
-
 import json
 import psycopg2
+from contextlib import contextmanager
 
 
 def read_config():
@@ -28,14 +28,24 @@ def read_config():
         return json.load(f)
 
 
-def connect_to_db():
+@contextmanager
+def db_cursor():
     conn = psycopg2.connect(**read_config()['db'])
     conn.autocommit = False  # Disabling autocommit to enable transactions
-    return conn, conn.cursor()
+    try:
+        yield conn.cursor()
+    finally:
+        conn.close()
 
 
 def find_pcs(speed, ram):
-    with connect_to_db()[1] as cursor:
+    try:
+        speed = float(speed)
+        ram = float(ram)
+    except ValueError:
+        print('Invalid input: speed and RAM must be numbers')
+        return
+    with db_cursor() as cursor:
         query = 'SELECT model, speed, ram, disk, price FROM pc WHERE speed = %s AND ram = %s'
         cursor.execute(query, (speed, ram))
         records = cursor.fetchall()
@@ -52,54 +62,64 @@ def model_exists(model_number, cursor):
 
 
 def remove_pc(model_number):
-    conn, cursor = connect_to_db()
-    product = model_exists(model_number, cursor)
-    if product:
-        try:
-            query = 'DELETE FROM product WHERE model = %s'
-            cursor.execute(query, (model_number,))
-            print(f'Deleted PC with model number {model_number}')
-            conn.commit()  # Commit the transaction
-        except:
-            conn.rollback()  # Rollback the transaction on error
-            print('Error deleting PC, transaction rolled back')
-    else:
-        print(f'PC with model number {model_number} does not exist')
+    with db_cursor() as cursor:
+        product = model_exists(model_number, cursor)
+        if product:
+            try:
+                query = 'DELETE FROM product WHERE model = %s'
+                cursor.execute(query, (model_number,))
+                print(f'Deleted PC with model number {model_number}')
+                cursor.connection.commit()  # Commit the transaction
+            except:
+                cursor.connection.rollback()  # Rollback the transaction on error
+                print('Error deleting PC, transaction rolled back')
+        else:
+            print(f'PC with model number {model_number} does not exist')
 
 
 def decrease_price(model_number):
     # TODO probably add a constraint to dont decrease the price below 0
-    conn, cursor = connect_to_db()
-    product = model_exists(model_number, cursor)
-    if product:
-        try:
-            query = 'UPDATE pc SET price = price - 100 WHERE model = %s'
-            cursor.execute(query, (model_number,))
-            print(f'Decreased price of PC with model number {model_number}')
-            conn.commit()  # Commit the transaction
-        except:
-            conn.rollback()  # Rollback the transaction on error
-            print('Error decreasing price, transaction rolled back')
-    else:
-        print(f'PC with model number {model_number} does not exist')
+    with db_cursor() as cursor:
+        product = model_exists(model_number, cursor)
+        if product:
+            try:
+                query = 'UPDATE pc SET price = price - 100 WHERE model = %s'
+                cursor.execute(query, (model_number,))
+                print(
+                    f'Decreased price of PC with model number {model_number}')
+                cursor.connection.commit()  # Commit the transaction
+            except:
+                cursor.connection.rollback()  # Rollback the transaction on error
+                print('Error decreasing price, transaction rolled back')
+        else:
+            print(f'PC with model number {model_number} does not exist')
 
 
 def insert_pc(manufacturer, model_number, speed, ram, disk, price):
-    conn, cursor = connect_to_db()
-    product = model_exists(model_number, cursor)
-    if product:
-        print(f'PC with model number {model_number} already exists')
-    else:
-        try:
-            query = 'INSERT INTO product VALUES (%s, %s, %s)'
-            cursor.execute(query, (manufacturer, model_number, 'PC'))
-            query = 'INSERT INTO pc VALUES (%s, %s, %s, %s, %s)'
-            cursor.execute(query, (model_number, speed, ram, disk, price))
-            print(f'Inserted PC with model number {model_number}')
-            conn.commit()  # Commit the transaction
-        except:
-            conn.rollback()  # Rollback the transaction on error
-            print('Error inserting PC, transaction rolled back')
+    try:
+        speed = float(speed)
+        ram = float(ram)
+        disk = float(disk)
+        price = float(price)
+    except ValueError:
+        print('Invalid input: speed, RAM, disk size, and price must be numbers')
+        return
+
+    with db_cursor() as cursor:
+        product = model_exists(model_number, cursor)
+        if product:
+            print(f'PC with model number {model_number} already exists')
+        else:
+            try:
+                query = 'INSERT INTO product VALUES (%s, %s, %s)'
+                cursor.execute(query, (manufacturer, model_number, 'PC'))
+                query = 'INSERT INTO pc VALUES (%s, %s, %s, %s, %s)'
+                cursor.execute(query, (model_number, speed, ram, disk, price))
+                print(f'Inserted PC with model number {model_number}')
+                cursor.connection.commit()  # Commit the transaction
+            except:
+                cursor.connection.rollback()  # Rollback the transaction on error
+                print('Error inserting PC, transaction rolled back')
 
 
 '''
@@ -123,8 +143,8 @@ if __name__ == "__main__":
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            speed = float(input("Enter speed: "))
-            ram = float(input("Enter RAM: "))
+            speed = input("Enter speed: ")
+            ram = input("Enter RAM: ")
             find_pcs(speed, ram)
         elif choice == "2":
             model_number = input("Enter model number: ")
@@ -135,10 +155,10 @@ if __name__ == "__main__":
         elif choice == "4":
             manufacturer = input("Enter manufacturer: ")
             model_number = input("Enter model number: ")
-            speed = float(input("Enter speed: "))
-            ram = float(input("Enter RAM: "))
-            disk = float(input("Enter disk size: "))
-            price = float(input("Enter price: "))
+            speed = input("Enter speed: ")
+            ram = input("Enter RAM: ")
+            disk = input("Enter disk size: ")
+            price = input("Enter price: ")
             insert_pc(manufacturer, model_number, speed, ram, disk, price)
         elif choice == "5":
             break
