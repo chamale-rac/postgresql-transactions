@@ -108,15 +108,6 @@ def insert_pc(manufacturer, model_number, speed, ram, disk, price):
                 print('Error inserting PC, transaction rolled back')
 
 
-'''
-if __name__ == "__main__":
-    find_pcs(2.5, 8)
-    # decrease_price('FakeModel')
-    remove_pc('FakeModel')
-    # insert_pc('FakeManufacturer', 'FakeModel', 2.5, 8, 100, 1000)
-'''
-
-
 if __name__ == "__main__":
     while True:
         print("Select an option:")
