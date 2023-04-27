@@ -17,4 +17,4 @@ To run the code, simply execute python main.py and follow the prompts. You will 
 
 Remember to modify the config.json file with the correct credentials for your own connection.
 
-The schema used in this example is contained in the schema.sql file.
+The schema and test data used in this example is contained in the schema.sql file.
