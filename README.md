@@ -15,4 +15,4 @@ The code uses a configuration file (config.json) to connect to the PostgreSQL da
 
 To run the code, simply execute python main.py and follow the prompts. You will be presented with a menu of options to choose from. Choose the option that corresponds to the operation you want to perform, and enter any required input when prompted.
 
-Remember to modify the config with the correct credentials for your own connection.
+Remember to modify the config.json file with the correct credentials for your own connection.
