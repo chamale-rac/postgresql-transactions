@@ -90,7 +90,6 @@ def insert_pc(manufacturer, model_number, speed, ram, disk, price):
     except ValueError:
         print('Invalid input: speed, RAM, disk size, and price must be numbers')
         return
-
     with db_cursor() as cursor:
         product = model_exists(model_number, cursor)
         if product:
