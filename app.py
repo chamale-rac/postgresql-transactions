@@ -3,6 +3,7 @@
 # Description: This file contains the main application logic for the PC database
 #              management system. It contains functions for finding PCs, removing
 #              PCs, decreasing the price of PCs, and inserting PCs.
+# Version: Development
 
 import json
 import psycopg2
